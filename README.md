@@ -1,119 +1,128 @@
-# FYT Theme — ثيم شاشة السيارة
+# Aura Software Studio
 
-مشروع تصميم وتطوير ثيم مخصص لشاشات Android للسيارات من نوع **FYT** (UIS7862 / UIS8581A).
+**The first integrated design-and-build environment for in-vehicle Android head units.**
 
-## المحتويات
+For decades, customizing a car's digital cockpit meant reverse-engineering factory firmware, editing XML by hand, and hoping nothing bricked on install. Aura changes that. It is a browser-based software studio where you design, preview, and ship a complete in-car experience — live, at full display resolution, before a single byte touches hardware.
+
+Built for **FYT** head units running **UIS7862**, **UIS7862S**, and **UIS8581A** chipsets.
+
+---
+
+## What makes this different
+
+| Before Aura | With Aura |
+|---|---|
+| Edit resources blindly in APK toolchains | See every pixel in a live 1280×720 / 1920×720 canvas |
+| Guess PiP window placement on a bench | Drag, snap, and export exact coordinates |
+| Separate tools for design, build, and deploy | One studio → one config → one USB installer |
+| No vehicle data in the preview | CAN bus widgets, climate, doors, ambient light — simulated in real time |
+
+Nothing like this has existed for the aftermarket head-unit ecosystem. Aura is the first studio that treats an in-car Android screen as a first-class software platform.
+
+---
+
+## Project structure
 
 ```
 fyt-theme/
-├── theme.config.json      ← إعدادات الثيم (ألوان، أبعاد، خلفيات)
-├── studio/                ← استوديو معاينة React (1920×720)
-├── assets/                ← صور وموارد الثيم
+├── theme.config.json      ← master configuration (colors, layout, PiP, vehicle data)
+├── studio/                ← Aura Software Studio (React, full-resolution preview)
+├── assets/                ← wallpapers, icons, visual resources
 │   ├── wallpapers/day/
 │   ├── wallpapers/night/
 │   ├── icons/
 │   └── bottom-bar/
 ├── scripts/
-│   └── build-theme.js     ← بناء حزمة الثيم
-└── output/                ← المخرجات الجاهزة
+│   ├── build-theme.js     ← compile configuration into a deployable package
+│   └── build-installer.js ← produce a USB-ready FYT installer
+└── output/                ← build artifacts
 ```
 
-## البدء السريع
+---
+
+## Quick start
 
 ```bash
 cd fyt-theme
-npm run setup      # تثبيت dependencies
-npm run dev        # فتح استوديو التصميم
+npm run setup      # install dependencies
+npm run dev        # open Aura Software Studio
 ```
 
-افتح المتصفح على: **http://localhost:5174**
+Open your browser at **http://localhost:5174**
 
-## استوديو التصميم
+---
 
-الاستوديو يتيح لك:
+## The Studio
 
-- **معاينة حية** للثيم بدقة 1920×720 (أو 1280×720 / 1920×1080)
-- **تعديل الألوان** — أساسي، تمييز، خلفية، شريط سفلي، PiP
-- **ضبط الأبعاد** — القائمة الجانبية، شريط A/V، شريط الحالة
-- **وضع نهار/ليل** — معاينة الثيم في الإضاءة المختلفة
-- **قوالب جاهزة** — Midnight, Ocean, Sport, Neon
-- **تصدير** — حفظ `theme.config.json`
+Aura Software Studio is a full in-car interface workbench:
 
-## بناء حزمة الثيم
+- **Live preview** at native resolution — 1280×720, 1920×720, or 1920×1080
+- **Color system** — primary, accent, background, surface, status bar, PiP chrome
+- **Spatial editor** — widget columns, center panel, CarPlay zone, PiP rectangle, bottom bar
+- **Day / night modes** — preview how the interface adapts to ambient light
+- **Vehicle simulation** — speed, doors, climate, ambient lighting via CAN bus data
+- **CarPlay / ZLink zone** — position and size the wireless CarPlay surface
+- **AI dashboard panel** — intelligence layer alongside driving data
+- **Export** — save `theme.config.json` and ship
+
+Design once. Preview exactly what the driver will see. Deploy with confidence.
+
+---
+
+## Build & deploy
+
+### Compile the software package
 
 ```bash
 npm run build-theme
 ```
 
-ينشئ مجلد في `output/` يحتوي على:
-- `theme.config.json`
-- `colors/theme_colors.xml` — لدمجها في APK
-- `wallpapers/` — مجلدات الخلفيات
-- `INSTALL.md` — تعليمات التثبيت
+Outputs to `output/<name>/`:
 
-## إضافة خلفيات
+- `theme.config.json` — full configuration
+- `colors/theme_colors.xml` — Android resource values
+- `wallpapers/` — day and night backgrounds
+- `INSTALL.md` — deployment notes
 
-1. ضع صورة الخلفية النهارية في:
-   `assets/wallpapers/day/wallpaper.jpg` (1920×720 px)
-
-2. ضع صورة الخلفية الليلية في:
-   `assets/wallpapers/night/wallpaper.jpg` (1920×720 px)
-
-## التثبيت على شاشة FYT
-
-### الخيار 1: Launcher66 (موصى به)
-
-[Launcher66](https://github.com/vasyl91/FYT-Launcher-Mod) launcher معدّل يدعم:
-- Skins مخصصة للـ widgets وشريط التحكم
-- Night mode تلقائي
-- PiP متعدد
-- Layout creator
+### Build the USB installer
 
 ```bash
-# فك APK
-apktool d launcher66.apk -o launcher66
-
-# استبدل الموارد
-cp output/midnight-drive/wallpapers/day/* launcher66/res/drawable/
-cp output/midnight-drive/colors/theme_colors.xml launcher66/res/values/
-
-# إعادة البناء والتوقيع
-apktool b launcher66 -o themed-launcher.apk
-apksigner sign --ks platform.jks themed-launcher.apk
-# كلمة المرور: android
+npm run build-installer
 ```
 
-### الخيار 2: FYT Factory
+Produces a FAT32-ready ZIP in `output/`. Copy it to a USB drive, plug it into the head unit, and installation begins automatically within ~5 seconds.
 
-1. [FYT Factory](https://fytfactory.mariodantas.com) — launchers جاهزة
-2. اختر launcher يناسب دقة شاشتك
-3. عدّل APK بالموارد من `output/`
+---
 
-### الخيار 3: USB Install
+## Adding wallpapers
 
-1. انسخ installer ZIP إلى فلاشة USB (FAT32)
-2. وصّل الفلاشة بشاشة السيارة
-3. التثبيت يبدأ تلقائياً بعد 5 ثوانٍ
+1. Day background → `assets/wallpapers/day/wallpaper.jpg` (match your target resolution)
+2. Night background → `assets/wallpapers/night/wallpaper.jpg`
 
-## معرفة Launcher الحالي
+Rebuild after adding assets.
 
-في شاشة FYT:
-- **Settings** → Factory menu (password: `3368`)
-- **Home Launcher** — اختر أو شاهد Launcher الحالي
-- Package name مثل: `com.android.launcher37`
+---
 
-## الدقات المدعومة
+## Supported displays
 
-| الدقة | الاستخدام |
-|-------|-----------|
-| 1920×720 | الأكثر شيوعاً (Tesla style) |
-| 1280×720 | شاشات أصغر |
-| 1920×1080 | شاشات 2K |
+| Resolution | Typical use |
+|---|---|
+| 1920×720 | Wide cinematic (most common) |
+| 1280×720 | Compact wide |
+| 1920×1080 | 2K panels |
 
-## روابط مفيدة
+---
+
+## Author
+
+**Ahmed Nassef** — أحمد ناصف
+
+Aura Software Studio · v3.0.0
+
+---
+
+## Links
 
 - [FYT Factory](https://fytfactory.mariodantas.com)
-- [Launcher66 Mod](https://github.com/vasyl91/FYT-Launcher-Mod)
 - [XDA FYT Forum](https://xdaforums.com/f/fyt-android-head-units.12445/)
-# Car-Navigator
 # Car-Navigator
