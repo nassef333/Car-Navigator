@@ -1,0 +1,7 @@
+test 
+#twipe_all 
+#twipe_data 
+#twipe_sd 
+twipe_cache 
+#dellapp 
+#make_updates

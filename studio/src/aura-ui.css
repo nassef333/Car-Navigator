@@ -1,0 +1,1396 @@
+/* ═══════════════════════════════════════════════════════════
+   AURA — 2027 Automotive Interface Design System
+   FYT launcher17 · UIS7862 / UIS8581A
+   ═══════════════════════════════════════════════════════════ */
+
+.au-screen {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--au-bg, #030508);
+  color: var(--au-text, #fff);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ─── Liquid Background ─── */
+.au-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.au-bg-base {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%, color-mix(in srgb, var(--au-accent) 12%, transparent), transparent),
+    radial-gradient(ellipse 70% 50% at 85% 75%, color-mix(in srgb, var(--au-secondary) 10%, transparent), transparent),
+    linear-gradient(165deg, #0a0e16 0%, var(--au-bg) 45%, #060810 100%);
+}
+
+.au-bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: calc(0.25 * var(--au-glow-intensity, 0.7));
+  will-change: transform;
+}
+
+.au-bg-orb-a {
+  width: 55%;
+  height: 55%;
+  top: -15%;
+  left: -10%;
+  background: var(--au-accent);
+  animation: au-drift-a 18s ease-in-out infinite;
+}
+
+.au-bg-orb-b {
+  width: 45%;
+  height: 45%;
+  bottom: -10%;
+  right: -5%;
+  background: var(--au-secondary);
+  animation: au-drift-b 22s ease-in-out infinite;
+}
+
+.au-bg-mesh {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background:
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 10%, transparent 70%);
+}
+
+.au-bg-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes au-drift-a {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(40px, 30px) scale(1.06); }
+}
+
+@keyframes au-drift-b {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-30px, -20px) scale(1.08); }
+}
+
+@keyframes au-breathe {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.015); opacity: 0.92; }
+}
+
+@keyframes au-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+@keyframes au-eq {
+  0%, 100% { transform: scaleY(0.3); }
+  50% { transform: scaleY(1); }
+}
+
+@keyframes au-pulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+@keyframes au-morph-num {
+  0% { opacity: 0.6; transform: translateY(4px) scale(0.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Status Bar ─── */
+.au-status {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 40px;
+  background: color-mix(in srgb, var(--au-glass) 80%, transparent);
+  backdrop-filter: blur(40px) saturate(1.4);
+  -webkit-backdrop-filter: blur(40px) saturate(1.4);
+  border-bottom: 1px solid var(--au-glass-border);
+}
+
+.au-status-left,
+.au-status-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  color: var(--au-text-dim);
+}
+
+.au-status-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  background: var(--au-surface);
+  border: 1px solid var(--au-glass-border);
+}
+
+.au-status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--au-accent);
+  box-shadow: 0 0 8px var(--au-accent-glow);
+  animation: au-pulse 2.5s ease-in-out infinite;
+}
+
+.au-status-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.au-status-time {
+  font-size: 22px;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.au-status-brand {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--au-accent);
+  opacity: 0.85;
+}
+
+.au-status-speed {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.au-status-gear {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--au-accent);
+  min-width: 18px;
+  text-align: center;
+}
+
+.au-mode-chip {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--au-accent) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--au-accent) 30%, transparent);
+  color: var(--au-accent);
+  transition: all var(--au-motion, 0.4s) ease;
+}
+
+/* ─── Main Content ─── */
+.au-body {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+  padding: 8px 12px 0;
+  gap: 0;
+}
+
+.au-main {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  transition: opacity var(--au-motion) ease, transform var(--au-motion) ease;
+}
+
+.au-main-enter {
+  animation: au-view-in var(--au-motion) cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes au-view-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ─── Floating Nav ─── */
+.au-nav {
+  position: relative;
+  z-index: 5;
+  width: 72px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 6px;
+  margin-right: 8px;
+  background: var(--au-glass);
+  backdrop-filter: blur(32px) saturate(1.3);
+  -webkit-backdrop-filter: blur(32px) saturate(1.3);
+  border: 1px solid var(--au-glass-border);
+  border-radius: var(--au-radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.au-nav-btn {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+  padding: 10px 4px;
+  border: none;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--au-text-dim);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.au-nav-btn:hover {
+  background: var(--au-surface);
+  color: var(--au-text);
+}
+
+.au-nav-btn.active {
+  background: color-mix(in srgb, var(--au-accent) 14%, transparent);
+  color: var(--au-accent);
+}
+
+.au-nav-btn.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 20px;
+  border-radius: 0 3px 3px 0;
+  background: var(--au-accent);
+  box-shadow: 0 0 12px var(--au-accent-glow);
+}
+
+.au-nav-label {
+  font-size: 7px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* ─── Glass Card ─── */
+.au-card {
+  background: var(--au-glass);
+  backdrop-filter: blur(28px) saturate(1.2);
+  -webkit-backdrop-filter: blur(28px) saturate(1.2);
+  border: 1px solid var(--au-glass-border);
+  border-radius: var(--au-radius);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.05),
+    0 8px 32px rgba(0,0,0,0.25);
+  transition: transform var(--au-motion) ease, box-shadow var(--au-motion) ease;
+}
+
+.au-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 12px 40px rgba(0,0,0,0.32);
+}
+
+.au-card-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--au-text-dim);
+}
+
+/* ─── Modular Dashboard (Bento Grid) ─── */
+.au-dashboard {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.2fr 1fr 1fr;
+  grid-template-rows: 1.4fr 1fr 0.8fr;
+  gap: 10px;
+  min-height: 0;
+  padding-bottom: 8px;
+}
+
+.au-dash-speed {
+  grid-row: 1 / 3;
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  animation: au-breathe 6s ease-in-out infinite;
+}
+
+.au-dash-nav {
+  grid-column: 2 / 4;
+  grid-row: 1;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.au-dash-music {
+  grid-column: 2;
+  grid-row: 2;
+  padding: 14px 16px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.au-dash-weather {
+  grid-column: 3;
+  grid-row: 2;
+  padding: 14px 16px;
+}
+
+.au-dash-vehicle {
+  grid-column: 1;
+  grid-row: 3;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.au-dash-ai {
+  grid-column: 2 / 4;
+  grid-row: 3;
+  padding: 10px 14px;
+  overflow: hidden;
+}
+
+/* Speed Hero */
+.au-speed-hero {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.au-speed-ring-wrap {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.au-speed-ring-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.au-speed-ring-track {
+  fill: none;
+  stroke: rgba(255,255,255,0.06);
+  stroke-width: 4;
+}
+
+.au-speed-ring-fill {
+  fill: none;
+  stroke: url(#auSpeedGrad);
+  stroke-width: 4;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  filter: drop-shadow(0 0 6px var(--au-accent-glow));
+}
+
+.au-speed-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.au-speed-num {
+  font-size: 72px;
+  font-weight: 200;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  animation: au-morph-num 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.au-speed-unit {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  color: var(--au-text-dim);
+  margin-top: 4px;
+}
+
+.au-speed-rpm {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--au-accent);
+  margin-top: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.au-speed-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.au-speed-stat {
+  text-align: center;
+}
+
+.au-speed-stat span {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--au-text-dim);
+}
+
+.au-speed-stat strong {
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Nav Widget */
+.au-nav-dest {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.au-nav-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--au-text-dim);
+}
+
+.au-nav-meta strong {
+  color: var(--au-accent);
+  font-weight: 600;
+}
+
+.au-nav-bar {
+  flex: 1;
+  min-height: 4px;
+  margin-top: auto;
+  background: rgba(255,255,255,0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.au-nav-bar i {
+  display: block;
+  height: 100%;
+  width: 65%;
+  background: linear-gradient(90deg, var(--au-accent), var(--au-secondary));
+  border-radius: 2px;
+  transition: width var(--au-motion) ease;
+}
+
+/* Music Widget */
+.au-music-art {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+
+.au-music-art::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.au-music-art-spin {
+  animation: au-spin-slow 12s linear infinite;
+}
+
+@keyframes au-spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.au-music-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.au-music-info strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.au-music-info span {
+  font-size: 11px;
+  color: var(--au-text-dim);
+}
+
+.au-music-eq {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 20px;
+}
+
+.au-music-eq i {
+  width: 3px;
+  height: 100%;
+  background: var(--au-accent);
+  border-radius: 2px;
+  transform-origin: bottom;
+  opacity: 0.4;
+}
+
+.au-music-eq i.on {
+  opacity: 1;
+  animation: au-eq 0.8s ease-in-out infinite;
+}
+
+/* Weather Widget */
+.au-weather-temp {
+  font-size: 36px;
+  font-weight: 200;
+  line-height: 1;
+}
+
+.au-weather-desc {
+  font-size: 12px;
+  color: var(--au-text-dim);
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
+.au-weather-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 10px;
+  color: var(--au-text-dim);
+}
+
+/* Vehicle mini */
+.au-veh-mini {
+  flex: 1;
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+}
+
+.au-veh-pill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.au-veh-pill span {
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--au-text-dim);
+}
+
+.au-veh-pill strong {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* AI Strip */
+.au-ai-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 2px 0;
+}
+
+.au-ai-strip::-webkit-scrollbar { display: none; }
+
+.au-ai-chip {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 24px;
+  background: color-mix(in srgb, var(--au-accent) 8%, var(--au-surface));
+  border: 1px solid color-mix(in srgb, var(--au-accent) 20%, transparent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  max-width: 280px;
+}
+
+.au-ai-chip:hover {
+  background: color-mix(in srgb, var(--au-accent) 14%, var(--au-surface));
+  transform: scale(1.02);
+}
+
+.au-ai-chip-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--au-accent) 18%, transparent);
+  color: var(--au-accent);
+  flex-shrink: 0;
+}
+
+.au-ai-chip-text strong {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.au-ai-chip-text span {
+  font-size: 9px;
+  color: var(--au-text-dim);
+}
+
+/* ─── Intelligence Panel ─── */
+.au-intel {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  padding-bottom: 8px;
+  min-height: 0;
+}
+
+.au-intel-hero {
+  grid-row: 1 / 3;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.au-intel-orb {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: conic-gradient(from 180deg, var(--au-accent), var(--au-secondary), var(--au-accent));
+  display: grid;
+  place-items: center;
+  animation: au-spin-slow 8s linear infinite;
+  box-shadow: 0 0 40px var(--au-accent-glow);
+}
+
+.au-intel-orb-inner {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--au-bg);
+  display: grid;
+  place-items: center;
+  color: var(--au-accent);
+}
+
+.au-intel-title {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+.au-intel-sub {
+  font-size: 13px;
+  color: var(--au-text-dim);
+  line-height: 1.5;
+}
+
+.au-intel-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.au-intel-item {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.au-intel-item-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--au-surface);
+  color: var(--au-accent);
+}
+
+.au-intel-item-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.au-intel-item-body strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.au-intel-item-body span {
+  font-size: 11px;
+  color: var(--au-text-dim);
+}
+
+.au-intel-conf {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--au-accent);
+  opacity: 0.7;
+}
+
+/* ─── Music Experience ─── */
+.au-music-view {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 16px;
+  padding-bottom: 8px;
+  min-height: 0;
+}
+
+.au-music-hero {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.au-music-hero-art {
+  width: 200px;
+  height: 200px;
+  border-radius: 20px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.au-music-hero-art.au-playing {
+  animation: au-float 4s ease-in-out infinite;
+}
+
+.au-music-wave {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  height: 48px;
+  width: 100%;
+}
+
+.au-music-wave i {
+  width: 4px;
+  border-radius: 2px;
+  background: var(--au-accent);
+  transform-origin: bottom;
+}
+
+.au-music-wave i.on {
+  animation: au-eq 0.6s ease-in-out infinite;
+}
+
+.au-music-detail {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.au-music-detail h2 {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.au-music-detail p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--au-text-dim);
+}
+
+.au-music-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.au-music-progress time {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--au-text-dim);
+  min-width: 36px;
+}
+
+.au-progress {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+.au-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--au-accent);
+  transition: width 0.3s linear;
+}
+
+.au-music-ctrl {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.au-ctrl-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--au-surface);
+  color: var(--au-text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.au-ctrl-btn:hover { transform: scale(1.06); background: rgba(255,255,255,0.08); }
+
+.au-ctrl-btn.play {
+  width: 56px;
+  height: 56px;
+  background: var(--au-accent);
+  color: #000;
+  box-shadow: 0 8px 32px var(--au-accent-glow);
+}
+
+.au-lyrics {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  scrollbar-width: none;
+}
+
+.au-lyrics::-webkit-scrollbar { display: none; }
+
+.au-lyric {
+  font-size: 14px;
+  color: var(--au-text-dim);
+  transition: all 0.3s ease;
+  padding: 4px 0;
+}
+
+.au-lyric.active {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--au-text);
+}
+
+/* ─── CarPlay Native ─── */
+.au-carplay {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding-bottom: 8px;
+}
+
+.au-carplay-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--au-radius-lg);
+  overflow: hidden;
+  background: rgba(0,0,0,0.4);
+  border: 1px solid var(--au-glass-border);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 16px 48px rgba(0,0,0,0.4),
+    0 0 0 1px color-mix(in srgb, var(--au-accent) 8%, transparent);
+}
+
+.au-carplay-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(0,0,0,0.3);
+  backdrop-filter: blur(20px);
+}
+
+.au-carplay-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.au-carplay-live {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--au-accent);
+}
+
+.au-carplay-viewport {
+  flex: 1;
+  position: relative;
+  min-height: 0;
+}
+
+.au-carplay-iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: #000;
+}
+
+.au-carplay-mask {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: 0 0 var(--au-radius-lg) var(--au-radius-lg);
+  box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
+}
+
+/* ─── Vehicle View ─── */
+.au-vehicle-view {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 12px;
+  padding-bottom: 8px;
+  min-height: 0;
+}
+
+.au-veh-cluster {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.au-veh-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.au-veh-stat {
+  padding: 12px;
+  text-align: center;
+}
+
+.au-veh-stat span {
+  display: block;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: var(--au-text-dim);
+}
+
+.au-veh-stat strong {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.au-veh-schematic {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ─── Settings ─── */
+.au-settings {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 12px;
+  padding-bottom: 8px;
+  min-height: 0;
+}
+
+.au-settings-nav {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.au-settings-nav button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: var(--au-text-dim);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+}
+
+.au-settings-nav button.active,
+.au-settings-nav button:hover {
+  background: var(--au-surface);
+  color: var(--au-text);
+}
+
+.au-settings-nav button.active {
+  color: var(--au-accent);
+}
+
+.au-settings-panel {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.au-settings-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: var(--au-surface);
+  border: 1px solid var(--au-glass-border);
+  color: var(--au-text-dim);
+}
+
+.au-settings-search input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--au-text);
+  font-size: 13px;
+  outline: none;
+}
+
+.au-settings-group {
+  margin-bottom: 20px;
+}
+
+.au-settings-group h3 {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--au-text-dim);
+  margin: 0 0 10px;
+}
+
+.au-setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--au-glass-border);
+}
+
+.au-setting-row span {
+  font-size: 13px;
+}
+
+.au-toggle {
+  width: 44px;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(255,255,255,0.12);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.au-toggle.on {
+  background: var(--au-accent);
+}
+
+.au-toggle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.au-toggle.on::after {
+  transform: translateX(18px);
+}
+
+.au-color-swatches {
+  display: flex;
+  gap: 8px;
+}
+
+.au-swatch {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.au-swatch.active {
+  border-color: #fff;
+  transform: scale(1.12);
+}
+
+/* ─── Climate Bar ─── */
+.au-climate {
+  position: relative;
+  z-index: 10;
+  margin: 0 12px 10px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--au-glass);
+  backdrop-filter: blur(32px) saturate(1.3);
+  -webkit-backdrop-filter: blur(32px) saturate(1.3);
+  border: 1px solid var(--au-glass-border);
+  border-radius: var(--au-radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.au-climate-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--au-text-dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.au-climate-btn:hover { background: var(--au-surface); color: var(--au-text); }
+
+.au-climate-btn.on {
+  background: color-mix(in srgb, var(--au-accent) 16%, transparent);
+  color: var(--au-accent);
+}
+
+.au-climate-temp {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.au-climate-temp button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--au-glass-border);
+  background: var(--au-surface);
+  color: var(--au-text);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.au-climate-temp button:active { transform: scale(0.92); }
+
+.au-climate-temp span {
+  font-size: 20px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  min-width: 36px;
+  text-align: center;
+}
+
+.au-climate-fan {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+}
+
+.au-climate-fan i {
+  width: 4px;
+  border-radius: 2px;
+  background: rgba(255,255,255,0.12);
+  transition: background 0.2s ease, height 0.2s ease;
+}
+
+.au-climate-fan i.on {
+  background: var(--au-accent);
+  box-shadow: 0 0 6px var(--au-accent-glow);
+}
+
+.au-climate-sep {
+  width: 1px;
+  height: 24px;
+  background: var(--au-glass-border);
+  margin: 0 4px;
+}
+
+.au-climate-info {
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--au-text-dim);
+  margin-left: auto;
+}
+
+.au-climate-info.on { color: var(--au-accent); }
+
+/* ─── Driving Mode Simplification ─── */
+.au-screen.driving .au-card:hover { transform: none; }
+.au-screen.driving .au-bg-orb { opacity: calc(0.15 * var(--au-glow-intensity, 0.7)); }
+.au-screen.driving .au-speed-num { font-size: 84px; }
+.au-screen.driving .au-ai-chip:hover { transform: none; }
+
+/* ─── Wide resolution ─── */
+.au-wide .au-dashboard {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1.2fr 1fr;
+}
+
+.au-wide .au-dash-speed { grid-row: 1; grid-column: 1; }
+.au-wide .au-dash-nav { grid-column: 2 / 4; grid-row: 1; }
+.au-wide .au-dash-music { grid-column: 4; grid-row: 1; }
+.au-wide .au-dash-weather { grid-column: 1; grid-row: 2; }
+.au-wide .au-dash-vehicle { grid-column: 2; grid-row: 2; }
+.au-wide .au-dash-ai { grid-column: 3 / 5; grid-row: 2; }
+
+.au-wide .au-speed-num { font-size: 88px; }
+.au-wide .au-music-view { grid-template-columns: 1fr 1.5fr 1fr; }
+
+.au-veh-schematic {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-height: 0;
+}
+
+.au-veh-diagram {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.au-veh-diagram-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.au-veh-diagram-meta {
+  font-size: 11px;
+  color: var(--au-text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.au-veh-diagram-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.au-veh-diagram-svg {
+  width: 100%;
+  max-width: 240px;
+  height: auto;
+  max-height: 320px;
+}
+
+/* ─── Placeholder ─── */
+.au-placeholder {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  color: var(--au-text-dim);
+  font-size: 13px;
+}
+
+.au-placeholder strong {
+  display: block;
+  font-size: 20px;
+  color: var(--au-accent);
+  margin-bottom: 4px;
+}

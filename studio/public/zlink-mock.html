@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZLink · CarPlay</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      background: #000;
+      color: #fff;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 16px;
+      background: rgba(255,255,255,0.06);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+    .bar-left { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+    .bar-left svg { width: 18px; height: 18px; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: #30D158; box-shadow: 0 0 8px #30D158; }
+    .bar-right { font-size: 11px; color: rgba(255,255,255,0.45); }
+    .grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px 10px;
+      padding: 16px 18px;
+      align-content: start;
+      overflow: auto;
+    }
+    .app {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: #fff;
+      padding: 4px;
+      border-radius: 12px;
+      transition: transform .15s, background .15s;
+    }
+    .app:hover { background: rgba(255,255,255,0.06); transform: scale(1.03); }
+    .app:active { transform: scale(0.97); }
+    .icon {
+      width: 58px; height: 58px; border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: #fff;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+    }
+    .app span { font-size: 10px; font-weight: 500; opacity: 0.9; }
+    .now {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 16px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      flex-shrink: 0;
+    }
+    .art {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: linear-gradient(135deg, #FF6482, #BF5AF2);
+    }
+    .np { flex: 1; min-width: 0; }
+    .np strong { display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .np span { font-size: 10px; color: rgba(255,255,255,0.45); }
+    .ctrl { display: flex; gap: 12px; font-size: 16px; opacity: 0.75; }
+  </style>
+</head>
+<body>
+  <div class="bar">
+    <div class="bar-left">
+      <svg viewBox="0 0 24 24" fill="#fff"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04zM13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19z"/></svg>
+      CarPlay
+    </div>
+    <div class="bar-right"><span class="dot"></span> iPhone · ZLink</div>
+  </div>
+  <div class="grid" id="apps"></div>
+  <div class="now">
+    <div class="art"></div>
+    <div class="np"><strong>Blinding Lights</strong><span>The Weeknd</span></div>
+    <div class="ctrl"><span>‹</span><span>▶</span><span>›</span></div>
+  </div>
+  <script>
+    const apps = [
+      ['Maps', '#34C759'], ['Music', '#FF2D55'], ['Phone', '#34C759'], ['Messages', '#34C759'],
+      ['Calendar', '#FF3B30'], ['Settings', '#636366'], ['Podcasts', '#BF5AF2'], ['Audiobooks', '#FF9F0A'],
+      ['Now Playing', '#FF6482'], ['Siri', '#5AC8FA'], ['WhatsApp', '#25D366'], ['YouTube', '#FF0000'],
+    ];
+    const grid = document.getElementById('apps');
+    apps.forEach(([n, c]) => {
+      const b = document.createElement('button');
+      b.className = 'app';
+      b.innerHTML = `<div class="icon" style="background:${c}">${n[0]}</div><span>${n}</span>`;
+      grid.appendChild(b);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,880 @@
+/* NEXUS COCKPIT — Futuristic HUD UI */
+
+.nx-screen {
+  position: relative;
+  overflow: hidden;
+  background: #030508;
+  color: #fff;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+  --accent: #00E5FF;
+  --accent-soft: rgba(0, 229, 255, 0.2);
+  --glass: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --text-dim: rgba(255, 255, 255, 0.45);
+}
+
+/* Ambient */
+.nx-ambient {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.nx-mesh {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 20%, transparent 75%);
+}
+
+.nx-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.35;
+}
+
+.nx-glow-a {
+  width: 500px;
+  height: 500px;
+  top: -120px;
+  left: 10%;
+  background: var(--accent);
+  animation: nx-float 12s ease-in-out infinite;
+}
+
+.nx-glow-b {
+  width: 400px;
+  height: 400px;
+  bottom: -80px;
+  right: 15%;
+  background: #7C4DFF;
+  animation: nx-float 14s ease-in-out infinite reverse;
+}
+
+.nx-scan {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 0%, rgba(0,229,255,0.03) 50%, transparent 100%);
+  background-size: 100% 200%;
+  animation: nx-scan 8s linear infinite;
+}
+
+@keyframes nx-float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, 20px) scale(1.08); }
+}
+
+@keyframes nx-scan {
+  0% { background-position: 0 -100%; }
+  100% { background-position: 0 100%; }
+}
+
+@keyframes nx-pulse-ring {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.15); opacity: 0.15; }
+}
+
+/* Top bar — compact for 720px height */
+.nx-top {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 16px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--glass-border);
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(24px);
+}
+
+.nx-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nx-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  animation: nx-pulse-ring 2s ease-in-out infinite;
+}
+
+.nx-brand-text {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  color: #fff;
+}
+
+.nx-brand-sub {
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.nx-chips {
+  display: flex;
+  gap: 8px;
+}
+
+.nx-chip {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  color: var(--text-dim);
+}
+
+.nx-chip.live {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: rgba(0, 229, 255, 0.06);
+}
+
+.nx-chip.accent {
+  color: #fff;
+  border-color: rgba(124, 77, 255, 0.4);
+  background: rgba(124, 77, 255, 0.12);
+}
+
+.nx-time {
+  font-size: 22px;
+  font-weight: 200;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: #fff;
+}
+
+/* Main grid — base: 1280×720 */
+.nx-grid {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 228px 1fr 460px;
+  gap: 0;
+  min-height: 0;
+  padding: 10px 16px 6px;
+}
+
+.nx-col {
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.nx-hud {
+  padding-right: 12px;
+  border-right: 1px solid var(--glass-border);
+}
+
+.nx-vehicle {
+  padding: 0 12px;
+  border-right: 1px solid var(--glass-border);
+  align-items: center;
+}
+
+.nx-carplay {
+  padding-left: 12px;
+}
+
+/* HUD cluster */
+.nx-hud-cluster {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.nx-hud-label,
+.nx-veh-label,
+.nx-dz-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+}
+
+.nx-speed-ring {
+  position: relative;
+  width: 168px;
+  height: 168px;
+  margin: 0 auto;
+}
+
+.nx-ring-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.nx-rpm-arc {
+  filter: drop-shadow(0 0 6px var(--accent));
+  transition: stroke-dasharray 0.6s ease;
+}
+
+.nx-speed-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.nx-speed-value {
+  font-size: 52px;
+  font-weight: 200;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.nx-speed-unit {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+
+.nx-rpm-readout {
+  font-size: 10px;
+  color: var(--accent);
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.nx-pills {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.nx-pill {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  grid-template-rows: auto auto;
+  align-items: center;
+  gap: 2px 8px;
+  padding: 7px 10px;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: 10px;
+  backdrop-filter: blur(12px);
+}
+
+.nx-pill-key {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.nx-pill-val {
+  grid-column: 2;
+  grid-row: 1 / 3;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  justify-self: end;
+}
+
+.nx-pill-val.gear {
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.nx-pill:has(.nx-pill-bar) .nx-pill-val {
+  grid-row: 1;
+}
+
+.nx-pill-bar {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  height: 3px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.nx-pill-bar div {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.5s ease;
+}
+
+/* Vehicle schematic */
+.nx-veh-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.nx-veh-heading {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.nx-veh-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.nx-veh-svg {
+  width: 100%;
+  max-width: 220px;
+  height: auto;
+  max-height: 340px;
+}
+
+.nx-door-pulse {
+  animation: nx-pulse-ring 1.5s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.nx-veh-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding: 10px 0;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--text-dim);
+}
+
+.nx-veh-footer .on {
+  color: var(--accent);
+}
+
+/* CarPlay portal */
+.nx-cp-portal {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.nx-cp-frame {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  backdrop-filter: blur(32px);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.06),
+    0 12px 40px rgba(0,0,0,0.35),
+    0 0 0 1px rgba(0,229,255,0.05);
+  overflow: hidden;
+}
+
+.nx-cp-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.nx-cp-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nx-cp-device {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-dim);
+}
+
+.nx-cp-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.nx-cp-apps {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px 6px;
+  padding: 10px 12px;
+  align-content: start;
+  overflow: hidden;
+}
+
+.nx-cp-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.85);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 12px;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.nx-cp-app:hover {
+  background: rgba(255,255,255,0.06);
+  transform: scale(1.04);
+}
+
+.nx-cp-app span {
+  font-size: 9px;
+  font-weight: 500;
+}
+
+.nx-cp-app-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.nx-cp-foot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-top: 1px solid var(--glass-border);
+  background: rgba(0,0,0,0.25);
+}
+
+.nx-cp-art {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), #7C4DFF);
+}
+
+.nx-cp-foot strong {
+  display: block;
+  font-size: 11px;
+}
+
+.nx-cp-foot span {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+
+.nx-cp-ctrl {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+
+.nx-cp-ctrl button {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: #fff;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.nx-cp-ctrl button.play {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.nx-cp-tag {
+  display: none;
+}
+
+/* Dock — compact for 1280×720 */
+.nx-dock {
+  position: relative;
+  z-index: 2;
+  padding: 0 16px 10px;
+}
+
+.nx-dock-inner {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  backdrop-filter: blur(40px);
+  box-shadow: 0 -6px 24px rgba(0,0,0,0.3);
+}
+
+.nx-dock-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.nx-dock-zone.climate {
+  flex: 1.1;
+}
+
+.nx-dz-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nx-dz-content.compact {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.nx-dz-content strong {
+  font-size: 11px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.nx-dz-content span {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+
+.nx-dz-art {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.nx-dz-btns {
+  margin-left: auto;
+  display: flex;
+  gap: 4px;
+}
+
+.nx-dz-btns button {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: #fff;
+  cursor: pointer;
+  font-size: 11px;
+}
+
+.nx-dz-btns button.play {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.nx-dock-sep {
+  width: 1px;
+  align-self: stretch;
+  background: var(--glass-border);
+  margin: 0 10px;
+  flex-shrink: 0;
+}
+
+.nx-climate-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nx-climate-row button {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+
+.nx-climate-row button.active {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: rgba(0,229,255,0.08);
+}
+
+.nx-temp-ctrl {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nx-temp-ctrl button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border-radius: 6px;
+}
+
+.nx-temp-ctrl span {
+  font-size: 15px;
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  min-width: 32px;
+  text-align: center;
+}
+
+.nx-fan {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  height: 24px;
+}
+
+.nx-fan i {
+  display: block;
+  width: 4px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.nx-fan i.on {
+  background: var(--accent);
+}
+
+.nx-dock-quick {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.nx-dock-quick button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--glass-border);
+  background: var(--glass);
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.nx-dock-quick button:hover {
+  color: #fff;
+  border-color: var(--accent-soft);
+}
+
+/* Device bezel (preview frame) */
+.device-bezel {
+  background: linear-gradient(145deg, #1a1a1e 0%, #0d0d0f 100%);
+  border-radius: 24px;
+  padding: 14px;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.08),
+    0 40px 100px rgba(0,0,0,0.55);
+}
+
+.device-screen {
+  overflow: hidden;
+}
+
+.device {
+  margin: 0 auto;
+}
+
+/* ── 1280×720 tweaks ── */
+.nx-res-1280 .nx-brand-sub {
+  display: none;
+}
+
+.nx-res-1280 .nx-dock-radio,
+.nx-res-1280 .nx-dock-radio + .nx-dock-sep {
+  display: none;
+}
+
+.nx-res-1280 .nx-veh-footer {
+  gap: 16px;
+  padding: 6px 0;
+  font-size: 9px;
+}
+
+/* ── 1920×720 wide layout ── */
+.nx-res-wide .nx-grid {
+  grid-template-columns: 340px 1fr 660px;
+  padding: 16px 20px 8px;
+}
+
+.nx-res-wide .nx-hud { padding-right: 16px; }
+.nx-res-wide .nx-vehicle { padding: 0 20px; }
+.nx-res-wide .nx-carplay { padding-left: 16px; }
+
+.nx-res-wide .nx-top {
+  padding: 14px 28px;
+  min-height: 52px;
+}
+
+.nx-res-wide .nx-time { font-size: 28px; }
+.nx-res-wide .nx-brand-sub { display: inline; }
+
+.nx-res-wide .nx-speed-ring {
+  width: 220px;
+  height: 220px;
+}
+
+.nx-res-wide .nx-speed-value { font-size: 72px; }
+.nx-res-wide .nx-rpm-readout { font-size: 12px; margin-top: 8px; }
+
+.nx-res-wide .nx-pills {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nx-res-wide .nx-pill {
+  grid-template-columns: 56px 1fr auto;
+  grid-template-rows: auto;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 12px;
+}
+
+.nx-res-wide .nx-pill-key {
+  grid-column: auto;
+  grid-row: auto;
+  font-size: 9px;
+}
+
+.nx-res-wide .nx-pill-val {
+  grid-column: auto;
+  grid-row: auto;
+  font-size: 16px;
+  justify-self: auto;
+}
+
+.nx-res-wide .nx-pill-val.gear { font-size: 22px; }
+
+.nx-res-wide .nx-pill-bar {
+  grid-column: auto;
+  grid-row: auto;
+  height: 4px;
+}
+
+.nx-res-wide .nx-veh-svg {
+  max-width: 280px;
+  max-height: none;
+}
+
+.nx-res-wide .nx-cp-apps {
+  gap: 16px 12px;
+  padding: 20px 24px;
+}
+
+.nx-res-wide .nx-cp-app-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  font-size: 26px;
+}
+
+.nx-res-wide .nx-cp-app span { font-size: 11px; }
+
+.nx-res-wide .nx-cp-foot {
+  padding: 12px 20px;
+  gap: 14px;
+}
+
+.nx-res-wide .nx-cp-art { width: 44px; height: 44px; }
+.nx-res-wide .nx-cp-foot strong { font-size: 13px; }
+.nx-res-wide .nx-cp-ctrl button { width: 32px; height: 32px; font-size: 14px; }
+
+.nx-res-wide .nx-cp-tag {
+  display: block;
+  text-align: center;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: var(--text-dim);
+  padding-top: 8px;
+}
+
+.nx-res-wide .nx-dock {
+  padding: 0 20px 16px;
+}
+
+.nx-res-wide .nx-dock-inner {
+  align-items: stretch;
+  padding: 12px 16px;
+  border-radius: 18px;
+}
+
+.nx-res-wide .nx-dock-radio {
+  display: flex;
+}
+
+.nx-res-wide .nx-dock-radio + .nx-dock-sep {
+  display: block;
+}
+
+.nx-res-wide .nx-dz-content { gap: 12px; }
+.nx-res-wide .nx-dz-content strong { font-size: 13px; }
+.nx-res-wide .nx-dz-content span { font-size: 11px; }
+.nx-res-wide .nx-dz-art { width: 36px; height: 36px; }
+.nx-res-wide .nx-dz-btns button { width: 28px; height: 28px; font-size: 12px; }
+
+.nx-res-wide .nx-dock-sep { margin: 0 16px; }
+.nx-res-wide .nx-climate-row { gap: 12px; }
+.nx-res-wide .nx-climate-row button { padding: 6px 12px; border-radius: 8px; }
+.nx-res-wide .nx-temp-ctrl span { font-size: 18px; min-width: 36px; }
+
+.nx-res-wide .nx-dock-quick {
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nx-res-wide .nx-dock-quick button {
+  padding: 5px 14px;
+  border-radius: 8px;
+}

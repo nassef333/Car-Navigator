@@ -1,0 +1,14 @@
+{
+  "name": "fyt-theme",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "FYT Android car head unit theme project with design studio",
+  "scripts": {
+    "dev": "cd studio && npm run dev",
+    "build-studio": "cd studio && npm run build",
+    "build-theme": "node scripts/build-theme.js",
+    "build-installer": "node scripts/build-installer.js",
+    "setup": "cd studio && npm install"
+  }
+}

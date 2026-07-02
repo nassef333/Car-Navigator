@@ -1,0 +1,51 @@
+{
+  "name": "Ahmed Nassef",
+  "nameAr": "أحمد ناصف",
+  "author": "Ahmed Nassef",
+  "version": "3.0.0",
+  "description": "Aura — next-gen FYT launcher17 theme by Ahmed Nassef · 1280×720 · ZLink CarPlay · CAN bus · AI dashboard",
+  "target": {
+    "platform": "FYT",
+    "chipsets": ["UIS7862", "UIS7862S", "UIS8581A"],
+    "resolution": "1280x720",
+    "baseLauncher": "com.android.launcher17",
+    "installerRef": "190001020_com.android.launcher17"
+  },
+  "pip": {
+    "package": "com.zjin.zlink",
+    "label": "ZLink · CarPlay",
+    "pinned": true,
+    "service": "com.lsec.pipdie"
+  },
+  "layout": {
+    "widgetColumnWidth": 228,
+    "centerPanelWidth": 380,
+    "carplayWidth": 640,
+    "pipRect": { "x": 640, "y": 20, "w": 628, "h": 520 },
+    "cornerRadius": 14,
+    "pipCornerRadius": 12,
+    "bottomBarHeight": 52
+  },
+  "colors": {
+    "primary": "#00E5FF",
+    "accent": "#7C4DFF",
+    "background": "#030508",
+    "surface": "rgba(255,255,255,0.04)",
+    "textPrimary": "#FFFFFF",
+    "textSecondary": "rgba(255,255,255,0.45)",
+    "bottomBar": "rgba(0,0,0,0.5)"
+  },
+  "canbus": {
+    "package": "com.syu.canbus",
+    "data": ["CUR_SPEED", "C_SHOW_DOOR_WINDOW", "C_AMBIENT_LIGHT", "C_SHOW_AIR_WINDOW", "C_CANBUS_ID"]
+  },
+  "media": {
+    "music": "com.fyt.launcher.music",
+    "radio": "com.syu.carradio",
+    "bluetooth": "com.syu.bt"
+  },
+  "sysProps": {
+    "sys.lsec.pip_rect": "640 20 1268 540",
+    "persist.lsec.pip_pkg": "com.zjin.zlink"
+  }
+}
