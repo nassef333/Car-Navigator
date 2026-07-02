@@ -116,3 +116,4 @@ apksigner sign --ks platform.jks themed-launcher.apk
 - [Launcher66 Mod](https://github.com/vasyl91/FYT-Launcher-Mod)
 - [XDA FYT Forum](https://xdaforums.com/f/fyt-android-head-units.12445/)
 # Car-Navigator
+# Car-Navigator
